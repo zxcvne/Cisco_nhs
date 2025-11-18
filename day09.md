@@ -123,7 +123,7 @@ R1(config-line)#password ciscocon : 맨 처음 비빌번호
 R1(config-line)#login
 R1(config-line)#
 R1(config-line)#line vty 0 4 // telnet, ssh등 가상포트 [0,1,2,3,4]
-R1(config-line)#password ciscovty : vty 비밀번호
+R1(config-line)#password ciscovty : vty 비밀번호 설정안하면 telnet,ssh 로 접속 불가능
 R1(config-line)#login
 R1(config-line)#end
 R1#show run
@@ -148,7 +148,6 @@ A,B>ping 13.13.10.1
 A>telnet 13.13.10.1	 	->	exit
 ```
 
-
 ```
 en
 conf t
@@ -156,6 +155,8 @@ hostname R1
 enable secret cisco
 no ip domain-lookup
 line con 0
+exec-timeout 0 0
+logg syn
 password ciscocon
 login
 line vty 0 4
@@ -165,9 +166,58 @@ end
 show run
 ```
 
-
+```
+conf t
+int fa0/0
+ip address 13.13.0.1 255.255.255.0
+no shutdown
+end
+show run
+show ip int breif
+show ip route
+ping 13.13.0.2
+ping 13.13.0.3
+show arp
+```
 
 ```
 -- memo --
 howpassword
 ```
+
+<pre>
+R1#show ip int brief                              레이어 1계층          레이어 2계층
+Interface              IP-Address      OK? Method Status                Protocol
+                                                  // shutdown 상태        
+FastEthernet0/0        unassigned      YES NVRAM  administratively down down
+ 
+FastEthernet0/1        unassigned      YES NVRAM  administratively down down
+ 
+Serial1/0              unassigned      YES NVRAM  administratively down down
+ 
+Serial1/1              unassigned      YES NVRAM  administratively down down
+ 
+Serial1/2              unassigned      YES NVRAM  administratively down down
+ 
+Serial1/3              unassigned      YES NVRAM  administratively down down
+
+</pre>
+
+<pre>
+R1#show ip int brief
+Interface              IP-Address      OK? Method Status                Protocol
+ 
+FastEthernet0/0        13.13.10.1      YES manual up                    up
+ 
+FastEthernet0/1        unassigned      YES NVRAM  administratively down down
+ 
+Serial1/0              unassigned      YES NVRAM  administratively down down
+ 
+Serial1/1              unassigned      YES NVRAM  administratively down down
+ 
+Serial1/2              unassigned      YES NVRAM  administratively down down
+ 
+Serial1/3              unassigned      YES NVRAM  administratively down down
+</pre>
+
+ARPA : Ethernet
