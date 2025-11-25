@@ -73,3 +73,37 @@ end
 show run
 show ip route
 </pre>
+
+<pre>
+@R3
+
+conf t
+int lo 1
+ ip address 168.126.63.1 255.255.255.0
+!
+int lo 2
+ ip address 198.133.219.1 255.255.255.0
+!
+int lo 3
+ ip address 8.8.8.8 255.255.255.0
+!
+int lo 4
+ ip address 211.241.228.1 255.255.255.0
+ end
+</pre>
+
+<pre>
+@ R1
+
+conf t
+router rip
+version 2
+no auto-summary
+network 13.0.0.0
+passive-interface fa0/0
+end
+!
+
+show run
+show ip route
+</pre>
